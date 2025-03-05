@@ -1,18 +1,8 @@
-# SSH
-
-In this project, I became familiar connecting to and working
-with servers using the SSH protocol. I worked on a server
-provided by ALX.
-
-## Tasks :page_with_curl:
-
-* **0. Use a private key**
-  * [0-use_a_private_key](./0-use_a_private_key): Bash script that uses `ssh` to connect to my
-ALX-provided server.
-
-* **1. Create an SSH key pair**
-  * [1-create_ssh_key_pair](./1-create_ssh_key_pair): Bash script that creates an RSA key pair.
-
-* **2. Client configuration file**
-  * [2-ssh_config](./2-ssh_config): SSH configuration file configured to use the private key
-`~/.ssh/school` and to refuse authentication using a password.
+# General
+- Allowed editors: vi, vim, emacs
+- All your files will be interpreted on Ubuntu 20.04 LTS
+- All your files should end with a new line
+- A README.md file, at the root of the folder of the project, is mandatory
+- All your Bash script files must be executable
+- The first line of all your Bash scripts should be exactly #!/usr/bin/env bash
+The second line of all your Bash scripts should be a comment explaining what is the script doing

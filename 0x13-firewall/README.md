@@ -1,14 +1,4 @@
-# Firewall
+#Warning!
+Containers on demand cannot be used for this project (Docker container limitation)
 
-In this project, I used `ufw` to configure firewalls on my issued web servers.
-
-## Tasks :page_with_curl:
-
-* **0. Block all incoming traffic but**
-  * [0-block_all_incoming_traffic_but](./0-block_all_incoming_traffic_but): Bash
-  script that installs a `ufw` firewall to block all incoming traffic except for
-  ports `22`, `443` and `80` on a web server.
-
-* **1. Port forwarding**
-  * [100-port_forwarding](./100-port_forwarding): `ufw` configuration file that
-  configures a firewall to redirect port `8080/TCP` to port `80/TCP`.
+Be very careful with firewall rules! For instance, if you ever deny port 22/TCP and log out of your server, you will not be able to reconnect to your server via SSH, and we will not be able to recover it. When you install UFW, port 22 is blocked by default, so you should unblock it immediately before logging out of your server.

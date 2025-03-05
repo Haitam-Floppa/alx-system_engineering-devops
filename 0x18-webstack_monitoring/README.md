@@ -1,16 +1,9 @@
-# Webstack monitoring
-
-This project invovled setting up Sumo Logic accounts to monitor server traffic
-on my three HBnB servers.
-
-## Tasks :page_with_curl:
-
-* **0. Monitor your Nginx traffic**
-  * [0-monitor_your_nginx_traffic](./0-monitor_your_nginx_traffic): Text file containing
-  my Sumo Logic access key.
-    * First line: `Access ID`
-    * Second line: `Access Key`
-
-* **1. Monitor your server**
-  * For this task, I configured Sumo Logic to monitor my server's memory, CPU, network
-  and disk.
+# General
+- Allowed editors: vi, vim, emacs
+- All your files will be interpreted on Ubuntu 16.04 LTS
+- All your files should end with a new line
+- A README.md file, at the root of the folder of the project, is mandatory
+- All your Bash script files must be executable
+- Your Bash script must pass Shellcheck (version 0.3.7) without any error
+- The first line of all your Bash scripts should be exactly #!/usr/bin/env bash
+- The second line of all your Bash scripts should be a comment explaining what is the script doing
