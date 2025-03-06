@@ -1,55 +1,84 @@
 #!/usr/bin/env bash
-# Configure your Nginx server so that /redirect_me is redirecting to another page.
-# Handle 404 errors
+# duplicate web-01 to web-02
+# these scripts are an upgrade from the web-server scripts...
 
-# Update and Install nginx
-sudo apt -y update
-sudo apt -y install nginx
+# uncomment to see the script run in action
+#set -x
 
-# Remove and replace /var/www to store static content
-# Created /var/www/school/errors to store 404 error message
+echo -e "Updating and doing some minor checks...\n"
 
-rm -rf school
-mkdir school
-mkdir school/errors
-echo "Ceci n'est pas une page" > school/errors/404.html
+function install() {
+	command -v "$1" &> /dev/null
 
-touch school/index.html
-echo "Hello World!" > school/index.html
-
-sudo rm -rf /var/www/school
-sudo mv school /var/www/
-
-# Change the default configuration of nginx
-# Add redirection for localhost/redirect_me
-# Return  404.html in case of a 404 error (page not found)
-# Adde a header "X-server-BY" = $HOSTNAME
-
-touch default
-printf %s "server {
-        listen 80;
-        listen [::]:80;
-        add_header X-Served-By $HOSTNAME;
-
-        root /var/www/school;
-        index index.html;
-
-        location /redirect_me {
-            return 301 https://youtube.com;
-        }
-
-        error_page 404 /404.html;
-        location = /404.html {
-            root /var/www/school/errors/;
-        }
+	#shellcheck disable=SC2181
+	if [ $? -ne 0 ]; then
+		echo -e "	Installing: $1$\n"
+		sudo apt-get update -y -qq && \
+			sudo apt-get install -y "$1" -qq
+		echo -e "\n"
+	else
+		echo -e "	${1} is already installed.\n"
+	fi
 }
-" > default
 
-# Remove and replace existing configurations
-sudo rm -rf /etc/nginx/sites-available/default
-sudo rm -rf /etc/nginx/sites-enabled/default
-sudo mv default /etc/nginx/sites-available/
-sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+install nginx #install nginx
 
-# Restart nginx
-sudo service nginx restart
+echo -e "\nSetting up some minor stuff.\n"
+
+# allowing nginx on firewall
+sudo ufw allow 'Nginx HTTP'
+
+# Give the user ownership to website files for easy editing
+if [ -d "/var/www" ]; then
+	sudo chown -R "$USER":"$USER" /var/www
+	sudo chmod -R 755 /var/www
+else
+	sudo mkdir -p /var/www
+	sudo chown -R "$USER":"$USER" /var/www
+	sudo chmod -R 755 /var/www
+fi
+
+# create directories if not present
+for dir in /var/www/{html,error}; do
+	if ! [ -d "$dir" ]; then
+		mkdir -p "$dir"
+	fi
+done
+
+# creating new index
+echo "Hello World!" > /var/www/html/index.html
+
+# create new error page
+echo "Ceci n'est pas une page" > /var/www/html/error_404.html
+
+# backup default server config file
+sudo cp /etc/nginx/sites-enabled/default nginx-sites-enabled_default.backup
+
+server_config=\
+"server {
+		listen 80 default_server;
+		listen [::]:80 default_server;
+		root /var/www/html;
+		index index.html index.htm index.nginx-debian.html
+		server_name_;
+		add_header X-Served-By \$hostname;
+		location / {
+			try_files \$uri \$uri/ =404;
+		}
+		if (\$request_filename ~ redirect_me){
+			rewrite ^ https://th3-gr00t.tk/ permanent;
+		}
+		error_page 404 /error_404.html;
+		location = /error_404.html {
+			internal;
+		}
+}"
+
+#shellcheck disable=SC2154
+echo "$server_config" | sudo dd status=none of=/etc/nginx/sites-enabled/default
+
+if [ "$(pgrep -c nginx)" -le 0 ]; then
+	sudo service nginx start
+else
+	sudo service nginx restart
+fi

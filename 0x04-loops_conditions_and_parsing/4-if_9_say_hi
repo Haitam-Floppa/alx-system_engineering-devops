@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-#displays "Best School" 10 times with an while loop and prints 'hi' after the 9th iteration
+# prints a string 10 times using while loop and on the ninth iteration it prints hi
 
-counter=0
+i=1
 
-while (( counter < 10))
-do
-  if (( counter == 9 ))
-  then
+while [ "$i" -lt 11 ]; do
+  echo "Best School"
+  
+  # if statement to print Hi when i is 9
+  if [ "$i" -eq 9 ]; then
     echo "Hi"
   fi
-  echo "Best School"
-  ((counter++))
+
+  ((i++))
 done

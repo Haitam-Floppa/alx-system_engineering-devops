@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Display "I am invincible" when SIGTERM
+# Highlander
 
-while ((1))
-do
-    echo "To infinity and beyond"
-    sleep 2
-    trap 'echo "I am invincible!!!"' SIGTERM
-done
+# print I am invincible!!! when receiving a SIGTERM signal
+trap "echo I am invincible!!!" SIGTERM
+
+while true; do
+  echo "To infinity and beyond"
+  sleep 2
+done;

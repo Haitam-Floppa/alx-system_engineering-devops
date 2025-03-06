@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
-#fizzbuzz
+# Fizzbuzz
 
-counter=1
+n=1
 
-while (( counter <= 100 ))
-do
-    if (( counter%3 == 0 && counter%5 == 0))
-    then
-        echo "FizzBuzz"
-    elif (( counter%3 == 0))
-    then
-        echo "Fizz"
-    elif (( counter%5 == 0))
-    then
-        echo "Buzz"
-    else
-        echo "$counter"
-    fi
-    ((counter++))
+while [ "$n" -le 100 ]; do
+
+
+  if ! (( n % 3 )) && ! (( n % 5 )); then
+    echo "FizzBuzz"
+  elif ! (( n % 3 )); then
+    echo "Fizz"
+  elif ! (( n % 5 )); then
+    echo "Buzz"
+  else
+    echo "$n"
+  fi
+  
+  ((n++))
 done

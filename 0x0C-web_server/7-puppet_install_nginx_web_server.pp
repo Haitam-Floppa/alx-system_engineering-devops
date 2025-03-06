@@ -1,8 +1,24 @@
-# Install Nginx web server (w/ Puppet)
-# Similar to task 4-not_found_page_404
-# install nginx and reset the default configurations
+# Setup New Ubuntu server with nginx
 
-exec { 'server configuration':
-  provider => shell,
-  command  => 'sudo apt-get -y update; sudo apt-get -y install nginx; echo "Hello World!" > /var/www/html/index.html; sudo sed -i "/server_name _;/a location /redirect_me {\\n\\treturn 301 https://youtube.com;\\n\\t}\\n" /etc/nginx/sites-available/default; sudo service nginx restart',
+exec { 'update system':
+        command => '/usr/bin/apt-get update',
+}
+
+package { 'nginx':
+	ensure => 'installed',
+	require => Exec['update system']
+}
+
+file {'/var/www/html/index.html':
+	content => 'Hello World!'
+}
+
+exec {'redirect_me':
+	command => 'sed -i "24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default',
+	provider => 'shell'
+}
+
+service {'nginx':
+	ensure => running,
+	require => Package['nginx']
 }
